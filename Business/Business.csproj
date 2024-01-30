@@ -1,0 +1,31 @@
+<Project Sdk="Microsoft.NET.Sdk">
+
+  <PropertyGroup>
+    <TargetFramework>net7.0</TargetFramework>
+    <ImplicitUsings>enable</ImplicitUsings>
+    <Nullable>enable</Nullable>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <None Remove="Abstracts\" />
+    <None Remove="Concretes\" />
+    <None Remove="Validations\" />
+    <None Remove="Tools\" />
+    <None Remove="Tools\Exceptions\" />
+  </ItemGroup>
+  <ItemGroup>
+    <Folder Include="Abstracts\" />
+    <Folder Include="Concretes\" />
+    <Folder Include="Validations\" />
+    <Folder Include="Tools\" />
+    <Folder Include="Tools\Exceptions\" />
+  </ItemGroup>
+  <ItemGroup>
+    <ProjectReference Include="..\DataAccess\DataAccess.csproj" />
+    <ProjectReference Include="..\Entities\Entities.csproj" />
+  </ItemGroup>
+  <ItemGroup>
+    <PackageReference Include="Microsoft.AspNetCore.Http" Version="2.2.2" />
+    <PackageReference Include="Microsoft.Extensions.DependencyInjection" Version="7.0.0" />
+  </ItemGroup>
+</Project>
