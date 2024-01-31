@@ -21,18 +21,24 @@ public class CustomExceptionHandlerMiddleware
         {
             await _next(context);
         }
-        catch (ValidationException ex)
-        {
-            context.Response.StatusCode = ex.StatusCode;
-            context.Response.ContentType = Text.Plain;
-            await context.Response.WriteAsync(ex.Message);
-        }
         catch (Exception ex)
         {
+            var valex = ex.InnerException as ValidationException;
+            if (valex != null)
+            {
+                await HandleValidationException(valex, context);
+                return;
+            }
             _logger.LogError("İç hata oluştu:" + ex.Message);
             context.Response.StatusCode = StatusCodes.Status500InternalServerError;
             context.Response.ContentType = Text.Plain;
             await context.Response.WriteAsync("Internal server error");
         }
+    }
+    public async Task HandleValidationException(ValidationException ex, HttpContext context)
+    {
+        context.Response.StatusCode = ex.StatusCode;
+        context.Response.ContentType = Text.Plain;
+        await context.Response.WriteAsync(ex.Message);
     }
 }

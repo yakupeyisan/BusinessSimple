@@ -1,6 +1,6 @@
 ﻿using System;
 using Business.Tools.Exceptions;
-using Entities.Models;
+using Core.Entities;
 
 namespace Business.Validations;
 
@@ -15,4 +15,3 @@ public class UserValidations
         await Task.CompletedTask;
     }
 }
-

@@ -1,14 +1,15 @@
 ﻿using System;
-using Entities.Models;
+using Core.Entities;
 
 namespace Business.Abstracts;
-
 public interface IUserService
 {
     User? GetById(Guid id);
     Task<User?> GetByIdAsync(Guid id);
     IList<User> GetAll();
     Task<IList<User>> GetAllAsync();
+    User? GetByUserNameWithClaims(string userName);
+    Task<User?> GetByUserNameWithClaimsAsync(string userName);
     IList<User> GetAllByFirstName(string firstName);
     IList<User> GetAllByLastName(string lastName);
     IList<User> GetAllByBirthDate(short birthDate);

@@ -1,5 +1,5 @@
 ﻿using System;
-using Entities.Models;
+using Core.Entities;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 
@@ -17,5 +17,7 @@ public class BusinessDbContext:DbContext
         optionsBuilder.UseSqlServer("Server=localhost;Database=BusinessSimple;User Id=SA;TrustServerCertificate=true;Password=reallyStrongPwd123;");
     }
     public DbSet<User> Users { get; set; }
+    public DbSet<Claim> Claims { get; set; }
+    public DbSet<UserClaim> UserClaims { get; set; }
 }
 

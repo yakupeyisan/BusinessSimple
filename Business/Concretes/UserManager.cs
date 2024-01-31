@@ -2,7 +2,8 @@
 using Business.Abstracts;
 using Business.Validations;
 using DataAccess.Abstracts;
-using Entities.Models;
+using Core.Entities;
+using Microsoft.EntityFrameworkCore;
 
 namespace Business.Concretes;
 
@@ -82,6 +83,7 @@ public class UserManager : IUserService
         return _userRepository.GetAll(u => u.LastName == lastName).ToList();
     }
 
+
     public User? GetById(Guid id)
     {
         return _userRepository.Get(u=>u.Id==id);
@@ -101,5 +103,13 @@ public class UserManager : IUserService
     {
        return await _userRepository.UpdateAsync(user);
     }
-}
 
+    public User? GetByUserNameWithClaims(string userName)
+    {
+       return _userRepository.Get(u => u.UserName == userName, include: user => user.Include(u => u.UserClaims).ThenInclude(uc => uc.Claim));
+    }
+    public async Task<User?> GetByUserNameWithClaimsAsync(string userName)
+    {
+        return await _userRepository.GetAsync(u => u.UserName == userName, include: user => user.Include(u => u.UserClaims).ThenInclude(uc => uc.Claim));
+    }
+}
