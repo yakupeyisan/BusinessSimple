@@ -1,5 +1,13 @@
-﻿using Business;
+﻿using Autofac;
+using Autofac.Extensions.DependencyInjection;
+using Business;
+using Business.Abstracts;
+using Business.DependencyResolvers.Autofac;
 using Business.Tools.Exceptions;
+using Core.Entities;
+using Core.Utilities.Tools;
+using DataAccess.Contexts;
+using Microsoft.EntityFrameworkCore;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -10,6 +18,10 @@ builder.Services.AddControllers();
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen();
 builder.Services.RegisterBusinessServices();
+builder.Host.UseServiceProviderFactory(new AutofacServiceProviderFactory());
+builder.Host.ConfigureContainer<ContainerBuilder>(builder => builder.RegisterModule(new AutofacBusinessModule()));
+
+ServiceTool.CreateServiceProvider(builder.Services);
 var app = builder.Build();
 
 // Configure the HTTP request pipeline.
@@ -25,5 +37,8 @@ app.UseAuthorization();
 
 app.MapControllers();
 app.UseMiddleware<CustomExceptionHandlerMiddleware>();
-app.Run();
 
+var dbContext = ServiceTool.GetService<BusinessDbContext>();
+await dbContext.Database.MigrateAsync();
+
+app.Run();
