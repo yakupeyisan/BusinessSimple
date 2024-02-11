@@ -7,9 +7,14 @@ public static class ServiceTool
 
     public static void CreateServiceProvider(IServiceCollection services)
     {
-        ServiceProvider=services.BuildServiceProvider();
+        ServiceProvider = services.BuildServiceProvider();
     }
 
-    public static T GetService<T>() => ServiceProvider.GetService<T>()??throw new Exception("Service not found");
+    public static T GetService<T>() => ServiceProvider.GetService<T>() ?? throw new Exception("Service not found");
+
+    public static object GetService(Type type)
+    {
+        return ServiceProvider.GetService(type) ?? throw new Exception("Service not found");
+    }
 
 }

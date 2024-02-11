@@ -1,5 +1,6 @@
 ﻿using Business.Abstracts;
 using Business.Validations;
+using Core.Aspects.Autofac.Transaction;
 using DataAccess.Abstracts;
 using Core.Entities;
 using Microsoft.EntityFrameworkCore;
@@ -15,7 +16,7 @@ public class ClaimManager : IClaimService
         _claimRepository = claimRepository;
         _claimValidations = claimValidations;
     }
-
+    [TransactionScopeAspect]
     public Claim Add(Claim claim)
     {
         return _claimRepository.Add(claim);

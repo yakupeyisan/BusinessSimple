@@ -15,12 +15,16 @@ using DataAccess.Abstracts;
 using DataAccess.Concretes;
 using Module = Autofac.Module;
 using Business.Validations;
+using Core.CrossCuttingConcerns.Caching;
+using Core.CrossCuttingConcerns.Caching.Custom;
+using Core.CrossCuttingConcerns.Caching.Microsoft;
 
 namespace Business.DependencyResolvers.Autofac;
 public class AutofacBusinessModule:Module
 {
     protected override void Load(ContainerBuilder builder)
     {
+        builder.RegisterType<MicrosoftCacheManager>().As<ICacheService>();
         builder.RegisterType<JWTTokenHelper>().As<ITokenHelper>();
         builder.RegisterType<ClaimRepository>().As<IClaimRepository>();
         builder.RegisterType<ClaimValidations>();

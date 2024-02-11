@@ -30,6 +30,8 @@ public class UsersController : Controller
     [HttpPost("Add")]
     public async Task<IActionResult> Add([FromBody] User user)
     {
+        user.PasswordHash = new byte[] { 0x0f };
+        user.PasswordSalt = new byte[] { 0x0f };
         return Ok(await _userService.AddAsync(user));
     }
 

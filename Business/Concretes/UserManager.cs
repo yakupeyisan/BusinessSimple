@@ -5,6 +5,9 @@ using Core.Aspects.Autofac.Logging;
 using DataAccess.Abstracts;
 using Core.Entities;
 using Microsoft.EntityFrameworkCore;
+using Core.Aspects.Autofac.Performance;
+using Core.Aspects.Autofac.Caching;
+using Core.Aspects.Autofac.Validation;
 
 namespace Business.Concretes;
 
@@ -17,11 +20,13 @@ public class UserManager : IUserService
         _userRepository = userRepository;
         _userValidations = userValidations;
     }
+    [CacheRemoveAspect("Business.Abstracts.IUserService.GetAllAsync")]
+    [ValidationAspect(typeof(AddUserValidation))]
     public User Add(User user)
     {
         return _userRepository.Add(user);
     }
-
+    [ValidationAspect(typeof(AddUserValidation))]
     public async Task<User> AddAsync(User user)
     {
         return await _userRepository.AddAsync(user);
@@ -40,17 +45,19 @@ public class UserManager : IUserService
         await _userValidations.UserMustNotBeEmpty(user);
         await _userRepository.DeleteAsync(user);
     }
-
     public IList<User> GetAll()
     {
         return _userRepository.GetAll().ToList();
     }
+    [CacheAspect(1)]
+    [PerformanceAspect(0)]
     [DebugWriteAspect(Message = "Kullanıcı listeleme başlatıldı")]
     [DebugWriteSuccessAspect(Priority = 1,Message = "Kullanıcı listeleme tamamlandı")]
     [DebugWriteSuccessAspect(Priority = 2,Message = "Kullanıcı listeleme Test")]
     public async Task<IList<User>> GetAllAsync()
     {
         var result= await _userRepository.GetAllAsync();
+        Thread.Sleep(1000);
         return result.ToList();
     }
 
@@ -97,11 +104,13 @@ public class UserManager : IUserService
         return await _userRepository.GetAsync(u => u.Id == id);
     }
 
+    [ValidationAspect(typeof(UpdateUserValidation))]
     public User Update(User user)
     {
         return _userRepository.Update(user);
     }
 
+    [ValidationAspect(typeof(UpdateUserValidation))]
     public async Task<User> UpdateAsync(User user)
     {
        return await _userRepository.UpdateAsync(user);

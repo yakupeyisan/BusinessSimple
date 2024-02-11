@@ -1,4 +1,7 @@
-﻿using Microsoft.AspNetCore.Mvc;
+﻿using System.Text.Json;
+using Core.Entities;
+using DataAccess.Abstracts;
+using Microsoft.AspNetCore.Mvc;
 
 namespace WebAPI.Controllers;
 
@@ -6,29 +9,34 @@ namespace WebAPI.Controllers;
 [Route("[controller]")]
 public class WeatherForecastController : ControllerBase
 {
-    private static readonly string[] Summaries = new[]
-    {
-        "Freezing", "Bracing", "Chilly", "Cool", "Mild", "Warm", "Balmy", "Hot", "Sweltering", "Scorching"
-    };
+    private readonly IUserRepository _userRepository;
 
-    private readonly ILogger<WeatherForecastController> _logger;
-
-    public WeatherForecastController(ILogger<WeatherForecastController> logger)
+    public WeatherForecastController(IUserRepository userRepository)
     {
-        _logger = logger;
+        _userRepository = userRepository;
     }
 
-    [HttpGet(Name = "GetWeatherForecast")]
-    public IEnumerable<WeatherForecast> Get()
+    [HttpGet("TestGetUsers")]
+    public IActionResult ListUsers()
     {
-        return Enumerable.Range(1, 5).Select(index => new WeatherForecast
-        {
-            Date = DateOnly.FromDateTime(DateTime.Now.AddDays(index)),
-            TemperatureC = Random.Shared.Next(-20, 55),
-            Summary = Summaries[Random.Shared.Next(Summaries.Length)]
-        })
-        .ToArray();
+        return Ok(_userRepository.GetAll());
+    }
+    [HttpGet("TestAddUser")]
+    public IActionResult Add(User user)
+    {
+        //yetki kontrolü
+            _userRepository.Add(user);
+            return Ok();
+    }
+    [HttpGet("TestUpdateUser")]
+    public IActionResult Update(User user)
+    {
+        _userRepository.Update(user);
+        return Ok();
     }
 }
-
-
+//Kod okunabiliği arttı (Readabilty )
+//Kodun modularitesi arttı 
+//Temiz kod yazdık (Clean Coding)
+//Kodun kullanılabilirliği arttı (Reusability)
+//Tekrar eden kodlardan kurtulduk. (DRY--- Do not repeat yourself)
