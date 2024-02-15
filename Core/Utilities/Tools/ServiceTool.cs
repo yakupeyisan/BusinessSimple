@@ -10,7 +10,7 @@ public static class ServiceTool
         ServiceProvider = services.BuildServiceProvider();
     }
 
-    public static T GetService<T>() => ServiceProvider.GetService<T>() ?? throw new Exception("Service not found");
+    public static T GetService<T>() => ServiceProvider.GetService<T>() ?? throw new Exception("Service not found => "+typeof(T).Name);
 
     public static object GetService(Type type)
     {

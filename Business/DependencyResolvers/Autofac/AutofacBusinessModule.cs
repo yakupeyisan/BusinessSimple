@@ -24,16 +24,8 @@ public class AutofacBusinessModule:Module
 {
     protected override void Load(ContainerBuilder builder)
     {
-        builder.RegisterType<MicrosoftCacheManager>().As<ICacheService>();
-        builder.RegisterType<JWTTokenHelper>().As<ITokenHelper>();
-        builder.RegisterType<ClaimRepository>().As<IClaimRepository>();
-        builder.RegisterType<ClaimValidations>();
         builder.RegisterType<ClaimManager>().As<IClaimService>();
-        builder.RegisterType<UserClaimRepository>().As<IUserClaimRepository>();
-        builder.RegisterType<UserValidations>();
-        builder.RegisterType<UserRepository>().As<IUserRepository>();
         builder.RegisterType<UserManager>().As<IUserService>();
-        builder.RegisterType<AuthValidations>();
         builder.RegisterType<AuthManager>().As<IAuthService>();
 
         var assembly = Assembly.GetExecutingAssembly();

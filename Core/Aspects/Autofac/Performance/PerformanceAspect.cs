@@ -1,11 +1,7 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Diagnostics;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+﻿using System.Diagnostics;
 using Castle.DynamicProxy;
 using Core.Utilities.Interceptors;
+using Core.Utilities.Tools;
 
 namespace Core.Aspects.Autofac.Performance;
 public class PerformanceAspect:MethodInterception
@@ -15,7 +11,7 @@ public class PerformanceAspect:MethodInterception
     public PerformanceAspect(int interval)
     {
         _interval = interval;
-        _stopwatch=new Stopwatch();
+        _stopwatch = ServiceTool.GetService<Stopwatch>();
     }
 
     protected override void OnBefore(IInvocation invocation)

@@ -38,17 +38,35 @@ public class UserValidations : BaseValidation
     }
 }
 
-public class AddUserValidation : UserValidations
+public class AddUserValidations : UserValidations
 {
-    public AddUserValidation(IUserRepository userRepository) : base(userRepository)
+    public AddUserValidations(IUserRepository userRepository) : base(userRepository)
     {
     }
 
 }
-public class UpdateUserValidation : UserValidations
+public class UpdateUserValidations : UserValidations
 {
-    public UpdateUserValidation(IUserRepository userRepository) : base(userRepository)
+    public UpdateUserValidations(IUserRepository userRepository) : base(userRepository)
     {
     }
 
+}
+
+public class DeleteValidations : BaseValidation
+{
+    protected readonly IUserRepository _userRepository;
+    public DeleteValidations(IUserRepository userRepository)
+    {
+        _userRepository = userRepository;
+    }
+    public async Task UserNotFound(Guid id)
+    {
+        var dbUser =await _userRepository.GetAsync(u => u.Id == id);
+        if (dbUser == null)
+        {
+            throw new ValidationException("User not found.", 400);
+        }
+        await Task.CompletedTask;
+    }
 }
