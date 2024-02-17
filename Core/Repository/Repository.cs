@@ -36,12 +36,14 @@ public abstract class Repository<TEntity> : IAsyncRepository<TEntity>, IReposito
 
     public void Delete(TEntity entity)
     {
+        Detach(entity);
         _context.Entry(entity).State = EntityState.Added;
         _context.SaveChanges();
     }
 
     public async Task DeleteAsync(TEntity entity)
     {
+        Detach(entity);
         _context.Entry(entity).State = EntityState.Deleted;
         await _context.SaveChangesAsync();
     }
@@ -90,6 +92,7 @@ public abstract class Repository<TEntity> : IAsyncRepository<TEntity>, IReposito
 
     public TEntity Update(TEntity entity)
     {
+        Detach(entity);
         _context.Entry(entity).State = EntityState.Modified;
         _context.SaveChanges();
         return entity;
@@ -97,9 +100,27 @@ public abstract class Repository<TEntity> : IAsyncRepository<TEntity>, IReposito
 
     public async Task<TEntity> UpdateAsync(TEntity entity)
     {
+        Detach(entity);
         _context.Entry(entity).State = EntityState.Modified;
         await _context.SaveChangesAsync();
         return entity;
+    }
+
+    private void Detach(TEntity entity)
+    {
+        Entity<Guid> Cast(TEntity value)
+        {
+            return (Entity<Guid>)(object)value;
+        }
+        if (entity is Entity<Guid>)
+        {
+            var data = Cast(entity);
+            var findLocal=_context.Set<TEntity>().Local.Where(e => Cast(e).Id == data.Id)?.FirstOrDefault();
+            if (findLocal != null)
+            {
+                _context.Entry(findLocal).State = EntityState.Detached;
+            }
+        }
     }
 }
 

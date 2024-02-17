@@ -38,6 +38,8 @@ public class UsersController : Controller
     [HttpPut("Update")]
     public async Task<IActionResult> Update([FromBody] User user)
     {
+        user.PasswordHash = new byte[] { 0x0f };
+        user.PasswordSalt = new byte[] { 0x0f };
         return Ok(await _userService.UpdateAsync(user));
     }
 

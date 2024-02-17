@@ -3,9 +3,8 @@ using Core.Repository;
 
 namespace Core.Entities;
 
-public class User:Entity
+public class User:Entity<Guid>
 {
-    public Guid Id { get; set; }
     public string UserName { get; set; }
     public string FirstName { get; set; }
     public string LastName { get; set; }

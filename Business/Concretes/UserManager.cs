@@ -107,6 +107,8 @@ public class UserManager : IUserService
     }
 
     [ValidationAspect(typeof(UpdateUserValidations))]
+    [CacheRemoveAspect("Business.Abstracts.IUserService.GetAllAsync")]
+    [CacheRemoveAspect("Business.Abstracts.IUserService.GetByIdAsync",Parameters= ["User.Id"])]
     public async Task<User> UpdateAsync(User user)
     {
         return await _userRepository.UpdateAsync(user);
