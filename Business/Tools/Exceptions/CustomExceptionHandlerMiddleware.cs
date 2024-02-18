@@ -1,6 +1,9 @@
-﻿using Microsoft.Extensions.Logging;
+﻿using System.Net;
+using Core.Aspects.Autofac.Security;
+using Microsoft.Extensions.Logging;
 using static System.Net.Mime.MediaTypeNames;
 using Microsoft.AspNetCore.Http;
+using System;
 
 namespace Business.Tools.Exceptions;
 
@@ -21,6 +24,16 @@ public class CustomExceptionHandlerMiddleware
         {
             await _next(context);
         }
+        catch (AuthenticationException ex)
+        {
+            await HandleAuthenticationException(ex, context);
+            return;
+        }
+        catch (AuthorizationException ex)
+        {
+            await HandleAuthorizationException(ex, context);
+            return;
+        }
         catch (Exception ex)
         {
             var valex = ex.InnerException as ValidationException;
@@ -35,6 +48,21 @@ public class CustomExceptionHandlerMiddleware
             await context.Response.WriteAsync("Internal server error");
         }
     }
+
+    private async Task HandleAuthorizationException(AuthorizationException authorizationException, HttpContext context)
+    {
+        context.Response.StatusCode = StatusCodes.Status403Forbidden;
+        context.Response.ContentType = Text.Plain;
+        await context.Response.WriteAsync(authorizationException.Message);
+    }
+
+    private async Task HandleAuthenticationException(AuthenticationException exception,HttpContext context)
+    {
+        context.Response.StatusCode = StatusCodes.Status401Unauthorized;
+        context.Response.ContentType = Text.Plain;
+        await context.Response.WriteAsync(exception.Message);
+    }
+
     public async Task HandleValidationException(ValidationException ex, HttpContext context)
     {
         context.Response.StatusCode = ex.StatusCode;

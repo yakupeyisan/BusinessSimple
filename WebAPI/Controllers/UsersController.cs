@@ -1,5 +1,6 @@
 ﻿using Business.Abstracts;
 using Core.Entities;
+using Entities.DTOs;
 using Microsoft.AspNetCore.Mvc;
 
 namespace WebAPI.Controllers;
@@ -18,7 +19,9 @@ public class UsersController : Controller
     [HttpGet("GetAll")]
     public async Task<IActionResult> GetAll()
     {
-        return Ok(await _userService.GetAllAsync());
+        var users = await _userService.GetAllAsync();
+        
+        return Ok(users.Select(user=>new ViewUserDto(user)));
     }
 
     [HttpGet("GetById/{id}")]
@@ -28,11 +31,9 @@ public class UsersController : Controller
     }
 
     [HttpPost("Add")]
-    public async Task<IActionResult> Add([FromBody] User user)
-    {
-        user.PasswordHash = new byte[] { 0x0f };
-        user.PasswordSalt = new byte[] { 0x0f };
-        return Ok(await _userService.AddAsync(user));
+    public async Task<IActionResult> Add([FromBody] AddUserDto userDto)
+    {;
+        return Ok(await _userService.AddAsync(userDto.GetUser()));
     }
 
     [HttpPut("Update")]

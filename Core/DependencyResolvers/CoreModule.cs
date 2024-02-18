@@ -1,6 +1,7 @@
 ﻿using System.Diagnostics;
 using Core.CrossCuttingConcerns.Caching;
 using Core.CrossCuttingConcerns.Caching.Microsoft;
+using Core.Utilities.ByPass;
 using Core.Utilities.Security.JWT;
 using Core.Utilities.Tools;
 using Microsoft.Extensions.DependencyInjection;
@@ -10,6 +11,7 @@ public class CoreModule : ICoreModule
 {
     public void Load(IServiceCollection services)
     {
+        services.AddScoped<SecurityByPass>();
         services.AddMemoryCache();
         services.AddSingleton<ICacheService, MicrosoftCacheManager>();
         services.AddSingleton<ITokenHelper, JWTTokenHelper>();

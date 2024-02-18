@@ -16,5 +16,4 @@ public static class ServiceTool
     {
         return ServiceProvider.GetService(type) ?? throw new Exception("Service not found");
     }
-
 }

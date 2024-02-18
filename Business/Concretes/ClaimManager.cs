@@ -68,6 +68,11 @@ public class ClaimManager : IClaimService
         return _claimRepository.Get(c=>c.Id==id);
     }
 
+    public Claim? GetByGroupAndName(string group, string name)
+    {
+        return _claimRepository.Get(c => c.Group == group && c.Name == name);
+    }
+
     public async Task<Claim?> GetByIdAsync(Guid id)
     {
         return await _claimRepository.GetAsync(c => c.Id == id);

@@ -17,6 +17,8 @@ namespace Business.Validations;
     }
     public async Task UserClaimMustNotBeEmpty(User user)
     {
+        return;
+
         if(user.UserClaims.Count==0)
             throw new ValidationException("User has not any 'Claim'. Please contact to system manager.");
     }

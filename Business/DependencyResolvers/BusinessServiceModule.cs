@@ -1,4 +1,6 @@
-﻿using Business.Validations;
+﻿using Business.Abstracts;
+using Business.Concretes;
+using Business.Validations;
 using Core.Utilities.Tools;
 using Microsoft.Extensions.DependencyInjection;
 
@@ -8,6 +10,7 @@ public class BusinessServiceModule : ICoreModule
 {
     public void Load(IServiceCollection services)
     {
+        services.AddScoped<IClaimService, ClaimManager>();
         services.AddScoped<AddUserValidations>();
         services.AddScoped<UpdateUserValidations>();
         services.AddScoped<ClaimValidations>();

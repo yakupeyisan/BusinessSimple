@@ -6,6 +6,7 @@ namespace Business.Abstracts;
 public interface IClaimService
 {
     Claim? GetById(Guid id);
+    Claim? GetByGroupAndName(string group,string name);
     Task<Claim?> GetByIdAsync(Guid id);
     IList<Claim> GetAll();
     Task<IList<Claim>> GetAllAsync();

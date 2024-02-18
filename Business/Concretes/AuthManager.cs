@@ -1,9 +1,11 @@
 ﻿using Business.Abstracts;
 using Business.Validations;
 using Core.Entities;
+using Core.Utilities.ByPass;
 using Core.Utilities.Security.Helper;
 using Core.Utilities.Security.JWT;
 using Core.Utilities.Security.Models;
+using Core.Utilities.Tools;
 using Entities.DTOs;
 
 namespace Business.Concretes;
@@ -13,15 +15,18 @@ public class AuthManager : IAuthService
     private readonly IUserService _userService;
     private readonly ITokenHelper _tokenHelper;
     private readonly AuthValidations _authValidations;
+    private readonly SecurityByPass _securityByPass;
     public AuthManager(IUserService userService,ITokenHelper tokenHelper, AuthValidations authValidations)
     {
         _userService = userService;
         _tokenHelper = tokenHelper;
         _authValidations = authValidations;
+        _securityByPass = ServiceTool.GetService<SecurityByPass>();
     }
 
     public TokenModel Register(UserForRegisterDto userForRegisterDto)
     {
+        _securityByPass.ByPass = true;
         var user= new User();
         user.IdentificationNumber = userForRegisterDto.IdentificationNumber;
         user.FirstName = userForRegisterDto.FirstName;
